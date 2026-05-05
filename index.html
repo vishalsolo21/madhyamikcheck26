@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduTips - West Bengal Board of Secondary Education 10th Result 2026</title>
+    <title>Madhyamik Results 2026</title>
     <META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.2/jspdf.min.js"></script>
@@ -56,7 +56,7 @@
             <table class="result_data">        
                 <tr style="width: 100%;">          
                     <td style="text-align: center;">
-                        <label>Roll Number (XXXXXXXXXXX)*</label>            
+                        <label>Roll Number (e.g.123456N0000)*</label>            
                         <input type="text" name="rollnumber" id="rollnumber" required maxlength="11" autocomplete="off">
                     </td>        
                     <td style="text-align: center;">
@@ -125,7 +125,7 @@
 
         // Basic formatting check
         if(roll.length !== 11 || dob.length !== 6) {
-            errorMsg.innerHTML = 'Please enter a valid 11-digit Roll Number and 6-digit DOB.';
+            errorMsg.innerHTML = 'Please enter a valid 11-digit Roll Number and 6-digit DOB';
             errorMsg.style.display = "block";
             return;
         }
@@ -150,7 +150,7 @@
             console.log("Error:", error);
             submitBtn.value = "Get Result";
             submitBtn.disabled = false;
-            errorMsg.innerHTML = 'Result not found! Please check your Roll Number and DOB.';       
+            errorMsg.innerHTML = 'Not Published Yet';       
             errorMsg.style.display = "block";
         });  
     }
@@ -249,7 +249,7 @@
         
         <div class="result_info">             
             <p><strong> DISCLAIMER</strong> </p>    
-            <p>Neither EduTips nor West Bengal Board Of Secondary Education is responsible for any inadvertent error that may have crept in the results being online. The results published on net are for immediate information only. These can not be treated as original statement of marks. Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
+            <p>Neither RaiganjLooters nor West Bengal Board Of Secondary Education is responsible for any inadvertent error that may have crept in the results being online. The results published on net are for immediate information only. These can not be treated as original statement of marks. Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
         </div>    
         `;    
 
@@ -287,6 +287,6 @@
         }     
     }    
 </script> 
-
+<br><p><strong>Made with ❤️ by Vishal | RAIGANJLOOTERS</strong></p>
 </body>
 </html>
