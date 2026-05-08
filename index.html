@@ -322,6 +322,937 @@
   </style>
 </head>
 <body>
+  
+Create a working result checking website using this (professional UI)
+
+<!-- Main API & Result Processing Script -->
+<script type="text/javascript">  
+    function submitForm(event){    
+        event.preventDefault();    
+        
+        const roll = document.getElementById("rollnumber").value.trim().toUpperCase();
+        const dob = document.getElementById("dob").value.trim();
+        const submitBtn = document.getElementById("submitBtn");
+        const errorMsg = document.getElementById("errorMsg");
+
+        // Basic formatting check
+        if(roll.length !== 11 || dob.length !== 6) {
+            errorMsg.innerHTML = 'Please enter a valid 11-digit Roll Number and 6-digit DOB.';
+            errorMsg.style.display = "block";
+            return;
+        }
+
+        submitBtn.value = "Fetching Result...";
+        submitBtn.disabled = true;
+        errorMsg.style.display = "none";
+
+        // Fetching data from Cloudflare Worker
+        fetch(https://wb10.edutips.workers.dev/?roll=${roll}&dob=${dob})
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Result Not Found");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log("Success:", data);
+            process_result(data);
+        })
+        .catch(function(error) {
+            console.log("Error:", error);
+            submitBtn.value = "Get Result";
+            submitBtn.disabled = false;
+            errorMsg.innerHTML = 'Result not found! Please check your Roll Number and DOB.';       
+            errorMsg.style.display = "block";
+        });  
+    }
+
+    function process_result(data) {        
+        console.log("Rendering Result");    
+
+        // Building the HTML using the JSON data
+        let resultsdata =     
+        <h1>West Bengal Board of Secondary Education</h1>    
+        <h2>Madhyamik Pariksha (Class X) Examination Result 2026 
+            <div id="resultoption" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; margin-top: 20px; font-family: Arial, sans-serif;">
+    
+    <!-- Check Another Button -->
+    <a href="javascript:location.reload();" style="background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer;">
+        🔄 Check Another
+    </a>
+
+    <!-- Print Button -->
+    <a href="javascript: window.print()" style="background-color: #34495e; color: #ffffff; text-decoration: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer;">
+        Print
+    </a>
+
+    <!-- Download Button -->
+    <button onclick="createPDF();" style="background-color: #27ae60; color: #ffffff; border: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;">
+        Download PDF
+    </button>
+
+</div>
+
+<!-- Powered By Section -->
+<div style="text-align: center; margin-top: 25px; font-size: 14px; color: #555555;">
+    ⚡ powered by: <span style="color: blue; font-weight: bold; font-size: 15px;">EduTips App</span>
+</div>
+        </h2>   
+        <div class="table_responsive">    
+            <table class="student_data">      
+                <tbody>        
+                    <tr>          
+                        <th>ROLL NO.</th>          
+                        <th>NAME</th>        
+                    </tr>        
+                    <tr>          
+                        <td>${data.roll}</td>          
+                        <td>${data.name}</td>        
+                    </tr>      
+                </tbody>    
+            </table>  
+        </div>
+
+        <div class="table_responsive">    
+            <table class="subject_data">      
+                <tbody>        
+                    <tr>          
+                        <th>SUBJECT</th>          
+                        <th>MARKS</th>          
+                        <th>GRADE</th>        
+                    </tr>        
+                    <tr>          
+                        <td>FIRST LANGUAGE</td>          
+                        <td>${data.marks[0] || ''}</td>          
+                        <td>${data.grades[0] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>SECOND LANGUAGE</td>          
+                        <td>${data.marks[1] || ''}</td>          
+                        <td>${data.grades[1] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>MATHEMATICS</td>          
+                        <td>${data.marks[2] || ''}</td>          
+                        <td>${data.grades[2] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>PHYSICAL SCIENCE</td>          
+                        <td>${data.marks[3] || ''}</td>          
+                        <td>${data.grades[3] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>LIFE SCIENCE</td>          
+                        <td>${data.marks[4] || ''}</td>          
+                        <td>${data.grades[4] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>HISTORY</td>          
+                        <td>${data.marks[5] || ''}</td>          
+                        <td>${data.grades[5] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>GEOGRAPHY</td>          
+                        <td>${data.marks[6] || ''}</td>          
+                        <td>${data.grades[6] || ''}</td>        
+                    </tr>        
+                    <tr>          
+                        <td>OPTIONAL ELECTIVE</td>          
+                        <td>${data.marks[7] || ''}</td>          
+                        <td>${data.grades[7] || ''}</td>        
+                    </tr>      
+                </tbody>    
+            </table>  
+        </div>  
+        
+        <div class="table_responsive">    
+            <table class="subject_data">      
+                <tbody>        
+                    <tr style="border-bottom: 1px solid #b4c4e8;">          
+                        <td><strong>GRAND TOTAL (AGGREGATE) : ${data.aggregate || ''}</strong></td>          
+                        <td><strong>RESULT: </strong> ${data.remarks || ''}</td>          
+                        <td><strong>OVERALL GRADE: </strong> ${data.overallGrade || ''}</td>        
+                    </tr>      
+                </tbody>    
+            </table>  
+        </div>
+        
+        <div class="result_info">             
+            <p><strong> DISCLAIMER</strong> </p>    
+            <p>Neither <b>EduTips</b> (edutips.in) nor West Bengal Board of Secondary Education (WBBSE) is responsible for any inadvertent error that may have crept in the results being online. <br/>Provisional results of madhyamik Pariksha, 2026 have be published by WBBSE with a view to providing immediate information only. <span style="color:red;">These can not be treated as original statement of marks.</span> Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
+        </div>    
+        ;    
+
+        document.getElementById("resultsinput").style.display = "none";     
+        document.getElementById("resultsbox").innerHTML = resultsdata;    
+        document.getElementById("resultsbox").style.display = "block";    
+    }  
+</script>
+
+<!-- Validation Scripts -->
+<script type="text/javascript">  
+    function removeSpaces(string) {      
+        return string.split(' ').join('');  
+    }                
+    function letternumberonly(key) {  
+        var keycode = (key.which) ? key.which : key.keyCode;       
+        var ch = String.fromCharCode(keycode);       
+        var filter = /^[0-9a-zA-Z\ \']+$/;       
+        if(!filter.test(ch)){           
+            return false;       
+        } else return true;    
+    }        
+    function validatenumerics(key) {         
+        var keycode = (key.which) ? key.which : key.keyCode;         
+        if (keycode > 31 && (keycode < 48 || keycode > 57)) {           
+            return false;         
+        } else return true;    
+    }    
+    function letteronly(key) {      
+        var isAlphaNum = String.fromCharCode(key.charCode).match(/^[a-zA-Z\ \']+$/);      
+        if(isAlphaNum || key.charCode == 0) {        
+            return true;       
+        } else {        
+            return false;      
+        }     
+    }    
+</script> 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Madhyamik Result 2026</title>
+
+  <!-- html2pdf -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body{
+      background: linear-gradient(135deg,#0f172a,#1e293b,#111827);
+      min-height:100vh;
+      color:#fff;
+      padding:20px;
+    }
+
+    .container{
+      max-width:950px;
+      margin:auto;
+    }
+
+    .card{
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:24px;
+      padding:30px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.4);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn{
+      from{
+        opacity:0;
+        transform:translateY(20px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .logo{
+      width:85px;
+      height:85px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:auto;
+      color:#2563eb;
+      font-size:38px;
+      font-weight:bold;
+    }
+
+    h1{
+      text-align:center;
+      margin-top:18px;
+      font-size:32px;
+      font-weight:700;
+    }
+
+    .subtitle{
+      text-align:center;
+      color:#cbd5e1;
+      margin-top:8px;
+      font-size:15px;
+    }
+
+    form{
+      margin-top:35px;
+    }
+
+    .input-group{
+      margin-bottom:22px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-size:15px;
+      color:#dbeafe;
+      font-weight:600;
+    }
+
+    input{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:rgba(255,255,255,0.12);
+      color:#fff;
+      outline:none;
+      font-size:16px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+
+    input::placeholder{
+      color:#cbd5e1;
+    }
+
+    .submitBtn{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(135deg,#2563eb,#1d4ed8);
+      color:#fff;
+      font-size:17px;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.3s;
+      margin-top:8px;
+    }
+
+    .submitBtn:hover{
+      transform:translateY(-2px);
+      opacity:0.95;
+    }
+
+    .submitBtn:disabled{
+      opacity:0.7;
+      cursor:not-allowed;
+    }
+
+    .error{
+      margin-top:18px;
+      background:rgba(239,68,68,0.15);
+      border:1px solid rgba(239,68,68,0.35);
+      color:#fecaca;
+      padding:14px;
+      border-radius:12px;
+      display:none;
+      text-align:center;
+    }
+
+    #resultsbox{
+      display:none;
+      margin-top:30px;
+    }
+
+    .result-card{
+      background:#fff;
+      color:#111827;
+      border-radius:22px;
+      padding:30px;
+      overflow:hidden;
+    }
+
+    .result-card h2{
+      text-align:center;
+      color:#1e3a8a;
+      margin-bottom:10px;
+    }
+
+    .result-card h3{
+      text-align:center;
+      margin-bottom:25px;
+      color:#475569;
+      font-size:17px;
+    }
+
+    .action-buttons{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-bottom:25px;
+    }
+
+    .action-buttons button,
+    .action-buttons a{
+      border:none;
+      text-decoration:none;
+      padding:12px 22px;
+      border-radius:10px;
+      color:#fff;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.3s;
+      font-size:15px;
+    }
+
+    .btn-blue{
+      background:#2563eb;
+    }
+
+    .btn-dark{
+      background:#111827;
+    }
+
+    .btn-green{
+      background:#16a34a;
+    }
+
+    .action-buttons button:hover,
+    .action-buttons a:hover{
+      transform:translateY(-2px);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:20px;
+      overflow:hidden;
+      border-radius:14px;
+    }
+
+    th{
+      background:#2563eb;
+      color:#fff;
+      padding:14px;
+      font-size:15px;
+    }
+
+    td{
+      padding:13px;
+      border-bottom:1px solid #e2e8f0;
+      text-align:center;
+      font-size:15px;
+    }
+
+    tr:nth-child(even){
+      background:#f8fafc;
+    }
+
+    .summary{
+      margin-top:20px;
+      background:#eff6ff;
+      border:1px solid #bfdbfe;
+      padding:18px;
+      border-radius:14px;
+      line-height:1.8;
+      font-size:15px;
+    }
+
+    .disclaimer{
+      margin-top:28px;
+      background:#f8fafc;
+      padding:18px;
+      border-radius:14px;
+      border-left:4px solid #2563eb;
+      color:#334155;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .powered{
+      margin-top:22px;
+      text-align:center;
+      color:#64748b;
+      font-size:14px;
+    }
+
+    footer{
+      text-align:center;
+      margin-top:25px;
+      color:#cbd5e1;
+      font-size:14px;
+    }
+
+    footer span{
+      color:#22c55e;
+      font-weight:700;
+    }
+
+    @media(max-width:700px){
+      .card{
+        padding:22px;
+      }
+
+      h1{
+        font-size:25px;
+      }
+
+      th,td{
+        font-size:13px;
+        padding:10px;
+      }
+
+      .action-buttons{
+        flex-direction:column;
+      }
+
+      .action-buttons button,
+      .action-buttons a{
+        width:100%;
+        text-align:center;
+      }
+    }
+
+    @media print{
+      body{
+        background:#fff;
+        padding:0;
+      }
+
+      .card,
+      footer{
+        display:none;
+      }
+
+      #resultsbox{
+        display:block !important;
+        margin:0;
+      }
+
+      .action-buttons{
+        display:none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Input Card -->
+  <div class="card" id="resultsinput">
+
+    <div class="logo">📘</div>
+
+    <h1>Madhyamik Result 2026</h1>
+
+    <p class="subtitle">
+      West Bengal Board of Secondary Education
+    </p>
+
+    <form onsubmit="submitForm(event)">
+
+      <div class="input-group">
+        <label>Roll Number</label>
+        <input 
+          type="text"
+          id="rollnumber"
+          maxlength="11"
+          placeholder="Enter 11-digit Roll Number"
+          onkeypress="return letternumberonly(event)"
+          required
+        >
+      </div>
+
+      <div class="input-group">
+        <label>Date of Birth</label>
+        <input 
+          type="text"
+          id="dob"
+          maxlength="6"
+          placeholder="DDMMYY"
+          onkeypress="return validatenumerics(event)"
+          required
+        >
+      </div>
+
+      <input 
+        type="submit"
+        value="Get Result"
+        class="submitBtn"
+        id="submitBtn"
+      >
+
+      <div class="error" id="errorMsg"></div>
+
+    </form>
+
+  </div>
+
+  <!-- Result Box -->
+  <div id="resultsbox"></div>
+
+  <footer>
+    Made with ❤️ by Vishal | <span>RAIGANJLOOTERS</span>
+  </footer>
+
+</div>
+
+<script>
+
+function submitForm(event){    
+    event.preventDefault();    
+    
+    const roll = document.getElementById("rollnumber").value.trim().toUpperCase();
+    const dob = document.getElementById("dob").value.trim();
+    const submitBtn = document.getElementById("submitBtn");
+    const errorMsg = document.getElementById("errorMsg");
+
+    if(roll.length !== 11 || dob.length !== 6){
+        errorMsg.innerHTML = 'Please enter a valid 11-digit Roll Number and 6-digit DOB.';
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    submitBtn.value = "Fetching Result...";
+    submitBtn.disabled = true;
+
+    errorMsg.style.display = "none";
+
+    fetch(`https://wb10.edutips.workers.dev/?roll=${roll}&dob=${dob}`)
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error("Result Not Found");
+        }
+        return response.json();
+    })
+    .then((data) => {
+        process_result(data);
+    })
+    .catch(function(error) {
+
+        console.log(error);
+
+        submitBtn.value = "Get Result";
+        submitBtn.disabled = false;
+
+        errorMsg.innerHTML = 'Result not found! Please check your Roll Number and DOB.';
+        errorMsg.style.display = "block";
+    });
+}
+
+function process_result(data){
+
+    let resultsdata = `
+    
+    <div class="result-card" id="pdfContent">
+
+      <h2>West Bengal Board of Secondary Education</h2>
+
+      <h3>Madhyamik Pariksha (Class X) Examination Result 2026</h3>
+
+      <div class="action-buttons">
+
+        <a href="javascript:location.reload();" class="btn-blue">
+          🔄 Check Another
+        </a>
+
+        <button onclick="window.print()" class="btn-dark">
+          🖨 Print
+        </button>
+
+        <button onclick="createPDF()" class="btn-green">
+          ⬇ Download PDF
+        </button>
+
+      </div>
+
+      <table>
+        <tr>
+          <th>ROLL NO.</th>
+          <th>NAME</th>
+        </tr>
+
+        <tr>
+          <td>${data.roll}</td>
+          <td>${data.name}</td>
+        </tr>
+      </table>
+
+      <table>
+
+        <tr>
+          <th>SUBJECT</th>
+          <th>MARKS</th>
+          <th>GRADE</th>
+        </tr>
+
+        <tr>
+          <td>FIRST LANGUAGE</td>
+          <td>${data.marks[0] || ''}</td>
+          <td>${data.grades[0] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>SECOND LANGUAGE</td>
+          <td>${data.marks[1] || ''}</td>
+          <td>${data.grades[1] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>MATHEMATICS</td>
+          <td>${data.marks[2] || ''}</td>
+          <td>${data.grades[2] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>PHYSICAL SCIENCE</td>
+          <td>${data.marks[3] || ''}</td>
+          <td>${data.grades[3] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>LIFE SCIENCE</td>
+          <td>${data.marks[4] || ''}</td>
+          <td>${data.grades[4] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>HISTORY</td>
+          <td>${data.marks[5] || ''}</td>
+          <td>${data.grades[5] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>GEOGRAPHY</td>
+          <td>${data.marks[6] || ''}</td>
+          <td>${data.grades[6] || ''}</td>
+        </tr>
+
+        <tr>
+          <td>OPTIONAL ELECTIVE</td>
+          <td>${data.marks[7] || ''}</td>
+          <td>${data.grades[7] || ''}</td>
+        </tr>
+
+      </table>
+
+      <div class="summary">
+
+        <strong>GRAND TOTAL:</strong> ${data.aggregate || ''}<br>
+
+        <strong>RESULT:</strong> ${data.remarks || ''}<br>
+
+        <strong>OVERALL GRADE:</strong> ${data.overallGrade || ''}
+
+      </div>
+
+      <div class="powered">
+        ⚡ Powered by <b style="color:#2563eb;">EduTips App</b>
+      </div>
+
+      <div class="disclaimer">
+
+        <strong>DISCLAIMER:</strong><br><br>
+
+        Neither EduTips nor West Bengal Board of Secondary Education (WBBSE) is responsible for any inadvertent error that may have crept in the results being online.<br><br>
+
+        These are provisional results and cannot be treated as original statement of marks. Please verify the information from original marksheet issued by the Board separately.
+
+      </div>
+
+    </div>
+    `;
+
+    document.getElementById("resultsinput").style.display = "none";
+
+    document.getElementById("resultsbox").innerHTML = resultsdata;
+
+    document.getElementById("resultsbox").style.display = "block";
+}
+
+function createPDF(){
+
+    const element = document.getElementById("pdfContent");
+
+    const opt = {
+        margin: 0.5,
+        filename: 'Madhyamik_Result_2026.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
+
+function removeSpaces(string){
+    return string.split(' ').join('');
+}
+
+function letternumberonly(key){
+
+    var keycode = (key.which) ? key.which : key.keyCode;
+
+    var ch = String.fromCharCode(keycode);
+
+    var filter = /^[0-9a-zA-Z\ \']+$/;
+
+    if(!filter.test(ch)){
+        return false;
+    } else return true;
+}
+
+function validatenumerics(key){
+
+    var keycode = (key.which) ? key.which : key.keyCode;
+
+    if (keycode > 31 && (keycode < 48 || keycode > 57)) {
+        return false;
+    } else return true;
+}
+
+function letteronly(key){
+
+    var isAlphaNum = String.fromCharCode(key.charCode).match(/^[a-zA-Z\ \']+$/);
+
+    if(isAlphaNum || key.charCode == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+</script>
+
+</body>
+</html>
+
+
+Create a fake popup with redirects to a new url automatically.
+Popup message: Site Is Under Maintenance 
+Redirecting to another site...
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Redirecting...</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      height:100vh;
+      background:#0f172a;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
+
+    .popup{
+      width:90%;
+      max-width:400px;
+      background:#ffffff;
+      border-radius:20px;
+      padding:30px 25px;
+      text-align:center;
+      box-shadow:0 10px 40px rgba(0,0,0,0.3);
+      animation: popup 0.4s ease;
+    }
+
+    @keyframes popup{
+      from{
+        transform:scale(0.8);
+        opacity:0;
+      }
+      to{
+        transform:scale(1);
+        opacity:1;
+      }
+    }
+
+    .icon{
+      font-size:60px;
+      margin-bottom:15px;
+    }
+
+    h2{
+      color:#111827;
+      margin-bottom:10px;
+      font-size:24px;
+    }
+
+    p{
+      color:#4b5563;
+      font-size:15px;
+      margin-bottom:20px;
+    }
+
+    .loader{
+      width:100%;
+      height:8px;
+      background:#e5e7eb;
+      border-radius:20px;
+      overflow:hidden;
+    }
+
+    .loader span{
+      display:block;
+      height:100%;
+      width:0%;
+      background:#2563eb;
+      animation:loading 4s linear forwards;
+    }
+
+    @keyframes loading{
+      from{
+        width:0%;
+      }
+      to{
+        width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="popup">
+
+    <div class="icon">⚠️</div>
+
+    <h2>Site Is Under Maintenance</h2>
+
+    <p>Redirecting to another site...</p>
+
+    <div class="loader">
+      <span></span>
+    </div>
+
+  </div>
+
+  <script>
+    // Change this URL
+    const redirectURL = "";
+
+    // Auto redirect after 4 seconds
+    setTimeout(() => {
+      window.location.href = redirectURL;
+    }, 4000);
+  </script>
 
 <div class="container">
 
