@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,12 +196,30 @@
         // Building the HTML using the JSON data
         let resultsdata = `    
         <h1>West Bengal Board of Secondary Education</h1>    
-        <h2>Madhyamik Pariksha (Class X) Examination Result 2026 
-            <div id="resultoption">
-                &nbsp;&nbsp;&nbsp;<a href="javascript:location.reload();" style="color:red"><strong>Back</strong></a> 
-                &nbsp;&nbsp;&nbsp;<a href="javascript: window.print()" style="color:red"><strong>Print</strong></a>
-                &nbsp;&nbsp;&nbsp;<button onclick="createPDF();" style="color:blue; border:none; background:transparent; font-weight:bold; cursor:pointer; font-size:16px;">Download</button>
-            </div>
+        <h2>Madhyamik Examination Result 2026 
+            <div id="resultoption" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; margin-top: 20px; font-family: Arial, sans-serif;">
+    
+    <!-- Check Another Button -->
+    <a href="javascript:location.reload();" style="background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer;">
+        Check Another
+    </a>
+
+    <!-- Print Button -->
+    <a href="javascript: window.print()" style="background-color: #34495e; color: #ffffff; text-decoration: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer;">
+        Print
+    </a>
+
+    <!-- Download Button -->
+    <button onclick="createPDF();" style="background-color: #27ae60; color: #ffffff; border: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;">
+        Download PDF
+    </button>
+
+</div>
+
+<!-- Powered By Section -->
+<div style="text-align: center; margin-top: 25px; font-size: 14px; color: #555555;">
+    Powered By: <span style="color: blue; font-weight: bold; font-size: 15px;">RAIGANJLOOTERS</span>
+</div>
         </h2>   
         <div class="table_responsive">    
             <table class="student_data">      
@@ -285,7 +302,7 @@
         
         <div class="result_info">             
             <p><strong> DISCLAIMER</strong> </p>    
-            <p>Neither RaiganjLooters nor West Bengal Board Of Secondary Education is responsible for any inadvertent error that may have crept in the results being online. The results published on net are for immediate information only. These can not be treated as original statement of marks. Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
+            <p>Neither <b>RAIGANJLOOTERS</b> nor West Bengal Board of Secondary Education (WBBSE) is responsible for any inadvertent error that may have crept in the results being online. <br/>Provisional results of madhyamik Pariksha, 2026 have be published by WBBSE with a view to providing immediate information only. <span style="color:red;">These can not be treated as original statement of marks.</span> Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
         </div>    
         `;    
 
@@ -322,7 +339,7 @@
             return false;      
         }     
     }    
-</script> 
+</script>                       
   <div class="footer">
       Made with ❤️ by Vishal | <span class="brand">RAIGANJLOOTERS</span>
   </div> 
