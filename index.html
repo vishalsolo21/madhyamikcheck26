@@ -99,9 +99,10 @@
                         <input type="text" name="dob" id="dob" required maxlength="6" onkeypress="return validatenumerics(event);" autocomplete="off">
                     </td>        
                 </tr> 
-                <tr style="width: 100%;">          
+                                                    <td>${data.grades[2] || ''}</td>        
+                                    <tr style="width: 100%;">          
                     <td style="text-align: center;" colspan="2">
-                        <input type="submit" class="submitBtn" id="submitBtn" name="getresult" value="GET RESULT">           
+                        <input type="submit" id="submitBtn" name="getresult" value="Get Result">           
                         <div id="errorMsg"></div>          
                     </td>        
                 </tr>      
@@ -131,7 +132,7 @@
                 format: 'a4'                 
             });                
             doc.addImage(img, 'PNG', 15, 15);                
-            doc.save('WBBSE_Result_RaiganjLooters.pdf');                
+            doc.save('EduTips_MP26_Result.pdf');                
             form.width(cache_width);              
             document.getElementById("resultoption").style.display = "block";
         });        
@@ -160,7 +161,7 @@
 
         // Basic formatting check
         if(roll.length !== 11 || dob.length !== 6) {
-            errorMsg.innerHTML = 'Please enter a valid 11-digit Roll Number and 6-digit DOB';
+            errorMsg.innerHTML = 'Please enter a valid 11-digit Roll Number and 6-digit DOB.';
             errorMsg.style.display = "block";
             return;
         }
@@ -185,7 +186,7 @@
             console.log("Error:", error);
             submitBtn.value = "Get Result";
             submitBtn.disabled = false;
-            errorMsg.innerHTML = 'Not Published Yet';       
+            errorMsg.innerHTML = 'Result not found! Please check your Roll Number and DOB.';       
             errorMsg.style.display = "block";
         });  
     }
@@ -196,12 +197,12 @@
         // Building the HTML using the JSON data
         let resultsdata = `    
         <h1>West Bengal Board of Secondary Education</h1>    
-        <h2>Madhyamik Examination Result 2026 
+        <h2>Madhyamik Pariksha (Class X) Examination Result 2026 
             <div id="resultoption" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; justify-content: center; margin-top: 20px; font-family: Arial, sans-serif;">
     
     <!-- Check Another Button -->
     <a href="javascript:location.reload();" style="background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 10px 22px; border-radius: 6px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer;">
-        Check Another
+        🔄 Check Another
     </a>
 
     <!-- Print Button -->
@@ -218,7 +219,7 @@
 
 <!-- Powered By Section -->
 <div style="text-align: center; margin-top: 25px; font-size: 14px; color: #555555;">
-    Powered By: <span style="color: blue; font-weight: bold; font-size: 15px;">RAIGANJLOOTERS</span>
+    ⚡ powered by: <span style="color: blue; font-weight: bold; font-size: 15px;">EduTips App</span>
 </div>
         </h2>   
         <div class="table_responsive">    
@@ -302,7 +303,7 @@
         
         <div class="result_info">             
             <p><strong> DISCLAIMER</strong> </p>    
-            <p>Neither <b>RAIGANJLOOTERS</b> nor West Bengal Board of Secondary Education (WBBSE) is responsible for any inadvertent error that may have crept in the results being online. <br/>Provisional results of madhyamik Pariksha, 2026 have be published by WBBSE with a view to providing immediate information only. <span style="color:red;">These can not be treated as original statement of marks.</span> Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
+            <p>Neither <b>EduTips</b> (edutips.in) nor West Bengal Board of Secondary Education (WBBSE) is responsible for any inadvertent error that may have crept in the results being online. <br/>Provisional results of madhyamik Pariksha, 2026 have be published by WBBSE with a view to providing immediate information only. <span style="color:red;">These can not be treated as original statement of marks.</span> Please verify the information from original statement of marks issued by the Board seperately and available at the time of declaration with the respective school.</p>    
         </div>    
         `;    
 
@@ -339,7 +340,8 @@
             return false;      
         }     
     }    
-</script>                       
+</script> 
+                 
   <div class="footer">
       Made with ❤️ by Vishal | <span class="brand">RAIGANJLOOTERS</span>
   </div> 
